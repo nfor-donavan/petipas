@@ -7,12 +7,13 @@ import {
   MessageCircle,
   Gamepad2,
   Shield,
+  Layers,
 } from "lucide-react";
 import { useApp } from "../AppContext";
 import { tips } from "../data/tips";
 
 const categories = [
-  { id: "all", en: "All", fr: "Tout", icon: null },
+  { id: "all", en: "All", fr: "Tout", icon: Layers },
   { id: "health", en: "Health", fr: "Santé", icon: Heart },
   { id: "nutrition", en: "Nutrition", fr: "Nutrition", icon: Utensils },
   {
@@ -54,24 +55,32 @@ export default function Tips() {
       <button
         onClick={() => navigate("/home")}
         style={{
-          background: "none",
+          background: "var(--card)",
           border: "none",
           cursor: "pointer",
-          marginBottom: "1rem",
+          marginBottom: "1.25rem",
+          color: "var(--text)",
+          width: "38px",
+          height: "38px",
+          borderRadius: "10px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <ArrowLeft size={24} />
+        <ArrowLeft size={20} />
       </button>
 
-      <h1>{t.title}</h1>
+      <h1 style={{ fontSize: "1.5rem", marginBottom: "1.25rem" }}>{t.title}</h1>
 
       <div
         style={{
           display: "flex",
           gap: "0.5rem",
           overflowX: "auto",
-          margin: "1.25rem 0",
+          marginBottom: "1.5rem",
           paddingBottom: "0.5rem",
+          scrollbarWidth: "none",
         }}
       >
         {categories.map((cat) => {
@@ -85,18 +94,23 @@ export default function Tips() {
                 display: "flex",
                 alignItems: "center",
                 gap: "0.4rem",
-                padding: "0.5rem 1rem",
+                padding: "0.55rem 1.1rem",
                 borderRadius: "20px",
-                border: isActive ? "none" : "1px solid #ddd",
-                background: isActive ? "#F4A259" : "white",
-                color: isActive ? "white" : "#555",
+                border: isActive ? "none" : "1.5px solid var(--border)",
+                background: isActive ? "var(--accent)" : "var(--surface)",
+                color: isActive ? "white" : "var(--text-muted)",
                 whiteSpace: "nowrap",
                 cursor: "pointer",
-                fontSize: "0.9rem",
+                fontSize: "0.88rem",
                 fontWeight: 600,
+                flexShrink: 0,
+                boxShadow: isActive
+                  ? "0 3px 10px rgba(244,162,89,0.3)"
+                  : "none",
+                transition: "all 0.15s ease",
               }}
             >
-              {Icon && <Icon size={16} />}
+              <Icon size={15} />
               {cat[language] || cat.en}
             </button>
           );
@@ -104,17 +118,31 @@ export default function Tips() {
       </div>
 
       {filteredTips.length === 0 && (
-        <p style={{ color: "#888", textAlign: "center", marginTop: "2rem" }}>
-          {t.empty}
-        </p>
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "3rem",
+            color: "var(--text-muted)",
+          }}
+        >
+          <p>{t.empty}</p>
+        </div>
       )}
 
       {filteredTips.map((tip) => {
         const content = tip[language] || tip.en;
         return (
-          <div className="card" key={tip.id}>
-            <h3>{content.title}</h3>
-            <p style={{ marginTop: "0.5rem", color: "#555" }}>
+          <div
+            className="card"
+            key={tip.id}
+            style={{
+              borderLeft: "4px solid var(--accent)",
+            }}
+          >
+            <h3 style={{ fontSize: "1.05rem", marginBottom: "0.4rem" }}>
+              {content.title}
+            </h3>
+            <p style={{ color: "var(--text-muted)", lineHeight: 1.5 }}>
               {content.content}
             </p>
           </div>

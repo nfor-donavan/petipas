@@ -24,6 +24,9 @@ export default function Milestones() {
 
   const list = milestones[ageGroup] || [];
   const completedCount = Object.values(checked).filter(Boolean).length;
+  const progressPercent = list.length
+    ? Math.round((completedCount / list.length) * 100)
+    : 0;
 
   const text = {
     en: { title: "Milestone Tracker", progress: "milestones completed" },
@@ -36,63 +39,114 @@ export default function Milestones() {
       <button
         onClick={() => navigate("/home")}
         style={{
-          background: "none",
+          background: "var(--card)",
           border: "none",
           cursor: "pointer",
-          marginBottom: "1rem",
+          marginBottom: "1.25rem",
+          color: "var(--text)",
+          width: "38px",
+          height: "38px",
+          borderRadius: "10px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <ArrowLeft size={24} />
+        <ArrowLeft size={20} />
       </button>
 
-      <h1>{t.title}</h1>
+      <h1 style={{ fontSize: "1.5rem", marginBottom: "1.25rem" }}>{t.title}</h1>
 
       <div
         style={{
-          background: "#F4A259",
-          color: "white",
-          borderRadius: "12px",
-          padding: "1rem",
-          margin: "1.25rem 0",
-          textAlign: "center",
-          fontWeight: 600,
+          background: "var(--card)",
+          borderRadius: "16px",
+          padding: "1.25rem",
+          marginBottom: "1.5rem",
         }}
       >
-        {completedCount} / {list.length} {t.progress}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "0.6rem",
+          }}
+        >
+          <span style={{ fontWeight: 700, color: "var(--text)" }}>
+            {completedCount} / {list.length}
+          </span>
+          <span style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>
+            {t.progress}
+          </span>
+        </div>
+        <div
+          style={{
+            height: "10px",
+            background: "rgba(0,0,0,0.08)",
+            borderRadius: "10px",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              height: "100%",
+              width: `${progressPercent}%`,
+              background: "linear-gradient(90deg, var(--accent), #F7B76D)",
+              borderRadius: "10px",
+              transition: "width 0.3s ease",
+            }}
+          />
+        </div>
       </div>
 
-      {list.map((milestone, index) => {
-        const isChecked = !!checked[index];
-        const label = milestone[language] || milestone.en;
-        return (
-          <div
-            key={index}
-            onClick={() => toggleMilestone(index)}
-            className="card"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              cursor: "pointer",
-              opacity: isChecked ? 0.7 : 1,
-            }}
-          >
-            {isChecked ? (
-              <CheckCircle2 size={22} color="#4CAF50" />
-            ) : (
-              <Circle size={22} color="#ccc" />
-            )}
-            <span
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem" }}>
+        {list.map((milestone, index) => {
+          const isChecked = !!checked[index];
+          const label = milestone[language] || milestone.en;
+          return (
+            <div
+              key={index}
+              onClick={() => toggleMilestone(index)}
               style={{
-                textDecoration: isChecked ? "line-through" : "none",
-                fontWeight: 500,
+                display: "flex",
+                alignItems: "center",
+                gap: "0.75rem",
+                cursor: "pointer",
+                padding: "1rem 1.1rem",
+                borderRadius: "14px",
+                background: isChecked ? "var(--card)" : "var(--surface)",
+                border: isChecked
+                  ? "1.5px solid transparent"
+                  : "1.5px solid var(--border)",
+                transition: "all 0.15s ease",
               }}
             >
-              {label}
-            </span>
-          </div>
-        );
-      })}
+              {isChecked ? (
+                <CheckCircle2
+                  size={22}
+                  color="#4CAF50"
+                  style={{ flexShrink: 0 }}
+                />
+              ) : (
+                <Circle
+                  size={22}
+                  color="var(--border)"
+                  style={{ flexShrink: 0 }}
+                />
+              )}
+              <span
+                style={{
+                  textDecoration: isChecked ? "line-through" : "none",
+                  color: isChecked ? "var(--text-muted)" : "var(--text)",
+                  fontWeight: 500,
+                }}
+              >
+                {label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
