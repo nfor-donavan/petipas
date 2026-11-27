@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useApp } from "../AppContext";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useApp } from '../AppContext';
 
 const ageGroups = [
   { value: "0-1", en: "0–1 years", fr: "0–1 ans" },
@@ -8,6 +8,18 @@ const ageGroups = [
   { value: "3-5", en: "3–5 years", fr: "3–5 ans" },
   { value: "5-8", en: "5–8 years", fr: "5–8 ans" },
 ];
+
+const choiceStyle = {
+  background: 'var(--surface)',
+  border: '2px solid var(--accent-strong)',
+  borderRadius: '14px',
+  padding: '1rem',
+  fontSize: '1.05rem',
+  fontWeight: 600,
+  color: 'var(--text)',
+  cursor: 'pointer',
+  width: '100%',
+};
 
 export default function Onboarding() {
   const { setLanguage, setAgeGroup } = useApp();
@@ -17,68 +29,38 @@ export default function Onboarding() {
 
   function handleLangSelect(lang) {
     setSelectedLang(lang);
+    setLanguage(lang); // page language and text switch right away
     setStep(2);
   }
 
   function handleAgeSelect(age) {
-    setLanguage(selectedLang);
     setAgeGroup(age);
-    navigate("/home");
+    navigate('/home');
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "linear-gradient(180deg, #FFF8F0 0%, #FFE8D1 100%)",
-        padding: "2rem 1.5rem",
-        textAlign: "center",
-      }}
-    >
+    <main style={{
+      minHeight: '100vh', display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+      background: 'linear-gradient(180deg, var(--bg) 0%, var(--hero-to) 100%)',
+      padding: '2rem 1.5rem',
+    }}>
       <img
         src="/logo.png"
         alt="PetiPas"
-        style={{
-          width: "96px",
-          height: "96px",
-          marginBottom: "1.5rem",
-          borderRadius: "22px",
-          boxShadow: "0 8px 24px rgba(244,162,89,0.25)",
-        }}
+        style={{ width: '96px', height: '96px', marginBottom: '1.5rem', borderRadius: '22px', boxShadow: '0 8px 24px rgba(244,162,89,0.25)' }}
       />
 
       {step === 1 && (
         <>
-          <h1 style={{ fontSize: "1.8rem", marginBottom: "0.4rem" }}>
-            Welcome to PetiPas
-          </h1>
-          <p style={{ color: "#888", marginBottom: "2rem" }}>
-            Choose your language / Choisissez votre langue
-          </p>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.75rem",
-              width: "100%",
-              maxWidth: "320px",
-            }}
-          >
-            <button
-              onClick={() => handleLangSelect("en")}
-              style={langButtonStyle}
-            >
-              🇬🇧 English
+          <h1 style={{ fontSize: '1.8rem', marginBottom: '0.4rem' }}>Welcome to PetiPas</h1>
+          <p style={{ marginBottom: '2rem' }}>Choose your language / Choisissez votre langue</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', maxWidth: '320px' }}>
+            <button type="button" onClick={() => handleLangSelect('en')} style={choiceStyle}>
+              <span aria-hidden="true">🇬🇧 </span><span lang="en">English</span>
             </button>
-            <button
-              onClick={() => handleLangSelect("fr")}
-              style={langButtonStyle}
-            >
-              🇫🇷 Français
+            <button type="button" onClick={() => handleLangSelect('fr')} style={choiceStyle}>
+              <span aria-hidden="true">🇫🇷 </span><span lang="fr">Français</span>
             </button>
           </div>
         </>
@@ -86,43 +68,18 @@ export default function Onboarding() {
 
       {step === 2 && (
         <>
-          <h1 style={{ fontSize: "1.6rem", marginBottom: "2rem" }}>
-            {selectedLang === "fr" ? "Âge de votre enfant" : "Your child's age"}
+          <h1 style={{ fontSize: '1.6rem', marginBottom: '2rem' }}>
+            {selectedLang === 'fr' ? "Âge de votre enfant" : "Your child's age"}
           </h1>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.75rem",
-              width: "100%",
-              maxWidth: "320px",
-            }}
-          >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', maxWidth: '320px' }}>
             {ageGroups.map((age) => (
-              <button
-                key={age.value}
-                onClick={() => handleAgeSelect(age.value)}
-                style={langButtonStyle}
-              >
-                {selectedLang === "fr" ? age.fr : age.en}
+              <button type="button" key={age.value} onClick={() => handleAgeSelect(age.value)} style={choiceStyle}>
+                {selectedLang === 'fr' ? age.fr : age.en}
               </button>
             ))}
           </div>
         </>
       )}
-    </div>
+    </main>
   );
 }
-
-const langButtonStyle = {
-  background: "white",
-  border: "2px solid #F4A259",
-  borderRadius: "14px",
-  padding: "1rem",
-  fontSize: "1.05rem",
-  fontWeight: 600,
-  color: "#2D2A26",
-  cursor: "pointer",
-  boxShadow: "0 2px 8px rgba(244,162,89,0.12)",
-  transition: "transform 0.15s ease",
-};

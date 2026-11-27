@@ -1,16 +1,18 @@
-# React + Vite
+# PetiPas v1.1
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Offline-first, bilingual (EN/FR) positive-parenting PWA.
 
-Currently, two official plugins are available:
+    npm install
+    npm run dev       # local development
+    npm run build     # production build (generates the offline service worker)
+    npm run preview   # test the production build locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## v1.1 accessibility changes
+- Screen-reader labels on all icon-only buttons (back, settings), bilingual
+- Text size setting (Normal / Large / Extra large) in Settings
+- Colour contrast fixed to WCAG AA (buttons, labels, status text, borders)
+- Page language (lang) switches with English/French
+- Milestones are real checkboxes (keyboard + screen-reader operable)
+- Visible keyboard focus, 44px minimum touch targets, reduced-motion support
+- Online/offline indicator now updates live
+- Dark mode fix on the Home "tip" card

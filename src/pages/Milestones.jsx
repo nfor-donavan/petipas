@@ -1,19 +1,17 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, Circle } from "lucide-react";
-import { useApp } from "../AppContext";
-import { milestones } from "../data/tips";
+import { useState, useEffect } from 'react';
+import { CheckCircle2, Circle } from 'lucide-react';
+import { useApp } from '../AppContext';
+import { milestones } from '../data/tips';
+import BackButton from '../components/BackButton';
 
 export default function Milestones() {
   const { language, ageGroup } = useApp();
-  const navigate = useNavigate();
   const [checked, setChecked] = useState({});
-
   const storageKey = `petipas_milestones_${ageGroup}`;
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey);
-    if (saved) setChecked(JSON.parse(saved));
+    setChecked(saved ? JSON.parse(saved) : {});
   }, [storageKey]);
 
   function toggleMilestone(index) {
@@ -23,130 +21,62 @@ export default function Milestones() {
   }
 
   const list = milestones[ageGroup] || [];
-  const completedCount = Object.values(checked).filter(Boolean).length;
-  const progressPercent = list.length
-    ? Math.round((completedCount / list.length) * 100)
-    : 0;
+  const completedCount = list.filter((_, i) => checked[i]).length;
+  const progressPercent = list.length ? Math.round((completedCount / list.length) * 100) : 0;
 
   const text = {
-    en: { title: "Milestone Tracker", progress: "milestones completed" },
-    fr: { title: "Suivi des étapes", progress: "étapes complétées" },
+    en: { title: "Milestone Tracker", progress: "milestones completed", list: "Developmental milestones" },
+    fr: { title: "Suivi des étapes", progress: "étapes complétées", list: "Étapes de développement" }
   };
   const t = text[language] || text.en;
 
   return (
-    <div className="container">
-      <button
-        onClick={() => navigate("/home")}
-        style={{
-          background: "var(--card)",
-          border: "none",
-          cursor: "pointer",
-          marginBottom: "1.25rem",
-          color: "var(--text)",
-          width: "38px",
-          height: "38px",
-          borderRadius: "10px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <ArrowLeft size={20} />
-      </button>
+    <main className="container">
+      <BackButton />
+      <h1 style={{ fontSize: '1.5rem', marginBottom: '1.25rem' }}>{t.title}</h1>
 
-      <h1 style={{ fontSize: "1.5rem", marginBottom: "1.25rem" }}>{t.title}</h1>
-
-      <div
-        style={{
-          background: "var(--card)",
-          borderRadius: "16px",
-          padding: "1.25rem",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "0.6rem",
-          }}
-        >
-          <span style={{ fontWeight: 700, color: "var(--text)" }}>
-            {completedCount} / {list.length}
-          </span>
-          <span style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>
-            {t.progress}
-          </span>
+      <div className="card" style={{ marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
+          <span style={{ fontWeight: 700 }}>{completedCount} / {list.length}</span>
+          <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t.progress}</span>
         </div>
         <div
-          style={{
-            height: "10px",
-            background: "rgba(0,0,0,0.08)",
-            borderRadius: "10px",
-            overflow: "hidden",
-          }}
+          role="progressbar" aria-valuemin={0} aria-valuemax={list.length} aria-valuenow={completedCount}
+          aria-label={`${completedCount} / ${list.length} ${t.progress}`}
+          style={{ height: '10px', background: 'rgba(128,128,128,0.25)', borderRadius: '10px', overflow: 'hidden' }}
         >
-          <div
-            style={{
-              height: "100%",
-              width: `${progressPercent}%`,
-              background: "linear-gradient(90deg, var(--accent), #F7B76D)",
-              borderRadius: "10px",
-              transition: "width 0.3s ease",
-            }}
-          />
+          <div style={{
+            height: '100%', width: `${progressPercent}%`, borderRadius: '10px',
+            background: 'var(--accent)', transition: 'width 0.3s ease',
+          }} />
         </div>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem" }}>
+      <div role="group" aria-label={t.list} style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
         {list.map((milestone, index) => {
           const isChecked = !!checked[index];
           const label = milestone[language] || milestone.en;
           return (
-            <div
-              key={index}
+            <button
+              type="button" key={index} role="checkbox" aria-checked={isChecked}
               onClick={() => toggleMilestone(index)}
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.75rem",
-                cursor: "pointer",
-                padding: "1rem 1.1rem",
-                borderRadius: "14px",
-                background: isChecked ? "var(--card)" : "var(--surface)",
-                border: isChecked
-                  ? "1.5px solid transparent"
-                  : "1.5px solid var(--border)",
-                transition: "all 0.15s ease",
+                display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer',
+                padding: '1rem 1.1rem', borderRadius: '14px', width: '100%', textAlign: 'left',
+                fontSize: '1rem', fontWeight: 500,
+                background: isChecked ? 'var(--card)' : 'var(--surface)',
+                border: isChecked ? '2px solid var(--ok)' : '2px solid var(--border-strong)',
+                color: isChecked ? 'var(--text-muted)' : 'var(--text)',
               }}
             >
-              {isChecked ? (
-                <CheckCircle2
-                  size={22}
-                  color="#4CAF50"
-                  style={{ flexShrink: 0 }}
-                />
-              ) : (
-                <Circle
-                  size={22}
-                  color="var(--border)"
-                  style={{ flexShrink: 0 }}
-                />
-              )}
-              <span
-                style={{
-                  textDecoration: isChecked ? "line-through" : "none",
-                  color: isChecked ? "var(--text-muted)" : "var(--text)",
-                  fontWeight: 500,
-                }}
-              >
-                {label}
-              </span>
-            </div>
+              {isChecked
+                ? <CheckCircle2 size={22} color="var(--ok)" style={{ flexShrink: 0 }} aria-hidden="true" />
+                : <Circle size={22} color="var(--text-muted)" style={{ flexShrink: 0 }} aria-hidden="true" />}
+              <span style={{ textDecoration: isChecked ? 'line-through' : 'none' }}>{label}</span>
+            </button>
           );
         })}
       </div>
-    </div>
+    </main>
   );
 }

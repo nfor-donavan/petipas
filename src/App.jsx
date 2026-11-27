@@ -1,11 +1,12 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AppProvider } from "./AppContext";
-import Onboarding from "./pages/Onboarding";
-import Home from "./pages/Home";
-import Tips from "./pages/Tips";
-import Milestones from "./pages/Milestones";
-import Community from "./pages/Community";
-import Settings from "./pages/Settings";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AppProvider } from './AppContext';
+import Onboarding from './pages/Onboarding';
+import Home from './pages/Home';
+import Tips from './pages/Tips';
+import Milestones from './pages/Milestones';
+import Community from './pages/Community';
+import Settings from './pages/Settings';
+
 function App() {
   return (
     <AppProvider>
